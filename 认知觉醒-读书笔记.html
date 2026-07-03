@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>认知觉醒 — 读书笔记</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream:       #f5f0e8;
+    --cream-dark:   #ebe4d4;
+    --ink:          #3a3226;
+    --ink-light:    #6b5e4e;
+    --accent:       #b5412c;
+    --accent-warm:  #c7562a;
+    --ribbon:       #d14334;
+    --ribbon-dark:  #a02e22;
+    --card:         #fffef9;
+    --shadow:       0 2px 16px rgba(60,50,30,0.10);
+    --radius:       10px;
+    --serif:        "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "Times New Roman", serif;
+    --sans:         "Noto Sans SC", "Source Han Sans SC", "PingFang SC", system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* 纸感纹理 */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(170,150,110,0.045) 31px,
+        rgba(170,150,110,0.045) 32px
+      );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    height: 65vh;
+    min-height: 380px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(30,22,12,0.08) 0%,
+        rgba(30,22,12,0.45) 50%,
+        rgba(30,22,12,0.92) 100%
+      ),
+      url("https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600&q=80") center/cover no-repeat;
+    background-color: #7a6350;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 44px;
+    color: #f5e6c8;
+  }
+  .hero-label {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    color: #e8d5b8;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5.5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    text-shadow: 0 3px 16px rgba(0,0,0,0.5);
+  }
+  .hero-sub {
+    font-size: clamp(0.88rem, 1.8vw, 1.05rem);
+    opacity: 0.78;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* 书签色带 - 桌面右上角 */
+  .hero-ribbon {
+    position: absolute;
+    top: 0;
+    right: 48px;
+    width: 40px;
+    height: 110px;
+    background: linear-gradient(180deg, var(--ribbon) 0%, var(--ribbon-dark) 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 91%, 0 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 14px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    writing-mode: vertical-rl;
+    z-index: 3;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));
+  }
+
+  /* 滚动时固定书签 */
+  .floating-ribbon {
+    position: fixed;
+    top: 0; right: 18px;
+    width: 32px; height: 72px;
+    background: linear-gradient(180deg, var(--ribbon), var(--ribbon-dark));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 88%, 0 100%);
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    writing-mode: vertical-rl;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.35s;
+    pointer-events: none;
+  }
+  .floating-ribbon.visible { opacity: 1; }
+
+  /* ===== 布局 ===== */
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 52px 0;
+    border-bottom: 1px solid rgba(180,160,120,0.22);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  /* ===== 标签 + 标题 ===== */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .tag::before {
+    content: "";
+    width: 22px; height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  h2.sec-title {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 28px;
+    line-height: 1.35;
+  }
+
+  /* ===== 一句话总览 ===== */
+  .one-liner-box {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 36px;
+    border-left: 4px solid var(--accent);
+    position: relative;
+  }
+  .one-liner-box::before {
+    content: "❝";
+    position: absolute;
+    top: 10px; left: 20px;
+    font-family: var(--serif);
+    font-size: 3.5rem;
+    color: var(--accent);
+    opacity: 0.10;
+    line-height: 1;
+  }
+  .one-liner-text {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+  }
+  .one-liner-text strong {
+    color: var(--accent);
+  }
+
+  /* ===== 书籍信息 ===== */
+  .book-section { margin-top: -52px; position: relative; z-index: 5; }
+  .book-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 28px rgba(60,50,30,0.13);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 36px;
+    align-items: start;
+  }
+  .book-cover {
+    width: 140px; height: 196px;
+    background: linear-gradient(150deg, #3a3226 0%, #5a4e3c 100%);
+    border-radius: 5px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.20);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #f5e6c8;
+    text-align: center;
+    padding: 20px 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .book-cover::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10px;
+    width: 2px; height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,200,0.12), transparent 60%);
+  }
+  .book-cover-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .book-cover-author {
+    font-size: 11px;
+    opacity: 0.65;
+    letter-spacing: 2px;
+  }
+  .book-meta { display: flex; flex-direction: column; gap: 12px; }
+  .book-meta h3 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .meta-row { display: flex; gap: 28px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 1px; }
+  .meta-lbl { font-size: 10px; color: var(--ink-light); letter-spacing: 1.5px; text-transform: uppercase; }
+  .meta-val { font-size: 0.92rem; font-weight: 500; }
+
+  /* ===== 核心框架：三重大脑 ===== */
+  .brain-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .brain-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(60,50,30,0.07);
+    padding: 28px 24px;
+    border-top: 3px solid;
+    transition: transform 0.2s;
+  }
+  .brain-card:hover { transform: translateY(-3px); }
+  .brain-card.b1 { border-top-color: #d35400; }
+  .brain-card.b2 { border-top-color: #e67e22; }
+  .brain-card.b3 { border-top-color: #2980b9; }
+
+  .brain-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .brain-name {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .brain-card.b1 .brain-name { color: #b3470a; }
+  .brain-card.b2 .brain-name { color: #b3700a; }
+  .brain-card.b3 .brain-name { color: #1a4f8a; }
+
+  .brain-age { font-size: 0.78rem; color: var(--ink-light); margin-bottom: 10px; font-style: italic; }
+  .brain-desc { font-size: 0.88rem; color: var(--ink-light); line-height: 1.7; }
+  .brain-pwr {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+  .b1 .brain-pwr { background: #fdf6f0; color: #a04010; }
+  .b2 .brain-pwr { background: #fdf8f0; color: #8a6010; }
+  .b3 .brain-pwr { background: #f0f5fd; color: #103a8a; }
+
+  .brain-verdict {
+    margin-top: 28px;
+    background: linear-gradient(135deg, #3a3226, #5a4e3c);
+    color: #f5e6c8;
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+  .brain-verdict strong { color: #e8c84a; }
+
+  /* ===== 元认知 ===== */
+  .meta-section { margin-top: 36px; }
+  .meta-banner {
+    background: linear-gradient(135deg, #1a3a6a, #2a5aaa);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .meta-banner::before {
+    content: "◉";
+    position: absolute;
+    top: -10px; right: 24px;
+    font-size: 8rem;
+    opacity: 0.04;
+    line-height: 1;
+  }
+  .meta-banner h3 {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .meta-banner p {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    opacity: 0.92;
+    position: relative;
+  }
+  .meta-how {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .meta-how-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .meta-how-card .how-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .meta-how-card h4 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .meta-how-card p {
+    font-size: 0.82rem;
+    opacity: 0.75;
+    line-height: 1.6;
+  }
+
+  /* ===== 金句大图 ===== */
+  .quotes-showcase { margin-top: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+  .big-quote {
+    position: relative;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px 40px 32px 52px;
+    overflow: hidden;
+  }
+  .big-quote::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .big-quote.q1::before { background: var(--accent); }
+  .big-quote.q2::before { background: #2980b9; }
+  .big-quote.q3::before { background: #27ae60; }
+  .big-quote.q4::before { background: #8e44ad; }
+  .big-quote.q5::before { background: #d35400; }
+  .big-quote.q6::before { background: #2c3e50; }
+
+  .big-quote-text {
+    font-family: var(--serif);
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .big-quote-text em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .big-quote src {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+  }
+  .big-quote-why {
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    background: var(--cream);
+    border-radius: 6px;
+    padding: 12px 16px;
+    line-height: 1.7;
+    border-left: 2px solid rgba(180,160,120,0.3);
+  }
+  .big-quote-why strong { color: var(--accent-warm); }
+
+  /* ===== 认知偏误 ===== */
+  .bias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
+  .bias-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(60,50,30,0.07);
+    padding: 24px;
+    border-top: 3px solid var(--accent);
+    transition: transform 0.2s;
+  }
+  .bias-card:hover { transform: translateY(-3px); }
+  .bias-card.b2 { border-top-color: #2980b9; }
+  .bias-card.b3 { border-top-color: #27ae60; }
+  .bias-card.b4 { border-top-color: #8e44ad; }
+  .bias-card.b5 { border-top-color: #d35400; }
+  .bias-card.b6 { border-top-color: #2c3e50; }
+
+  .bias-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .bias-en { font-size: 0.73rem; color: var(--ink-light); letter-spacing: 0.5px; margin-bottom: 10px; }
+  .bias-def { font-size: 0.87rem; color: var(--ink-light); line-height: 1.65; margin-bottom: 12px; }
+  .bias-sales {
+    font-size: 0.82rem;
+    background: var(--cream);
+    border-radius: 6px;
+    padding: 10px 12px;
+    line-height: 1.6;
+    color: var(--ink);
+    border-left: 2px solid rgba(180,160,120,0.3);
+  }
+  .bias-sales strong { color: var(--accent-warm); }
+
+  /* ===== 全书章节 ===== */
+  .chapter-tree { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .ch-part {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 6px rgba(60,50,30,0.06);
+    overflow: hidden;
+  }
+  .ch-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: default;
+  }
+  .ch-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .p1 .ch-num { background: var(--accent); }
+  .p2 .ch-num { background: #2980b9; }
+  .p3 .ch-num { background: #27ae60; }
+  .p4 .ch-num { background: #8e44ad; }
+
+  .ch-items { padding: 0 24px 14px 68px; display: flex; flex-direction: column; gap: 5px; }
+  .ch-item {
+    font-size: 0.86rem;
+    color: var(--ink-light);
+    padding: 5px 0;
+    border-bottom: 1px dashed rgba(180,160,120,0.18);
+    display: flex;
+    gap: 8px;
+  }
+  .ch-item::before { content: "§"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .ch-item strong { color: var(--ink); }
+
+  /* ===== 对你的启发 ===== */
+  .insight-hero {
+    background: linear-gradient(135deg, #3a3226 0%, #5a4a36 100%);
+    color: #f5e6c8;
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .insight-hero::before {
+    content: "💡";
+    position: absolute;
+    top: 16px; right: 28px;
+    font-size: 4rem;
+    opacity: 0.06;
+  }
+  .insight-hero h3 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .insight-hero > p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .insight-cards {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .insight-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(60,50,30,0.07);
+    padding: 24px 28px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    transition: transform 0.2s;
+  }
+  .insight-card:hover { transform: translateX(4px); }
+  .insight-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .insight-body h4 {
+    font-family: var(--serif);
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .insight-body p {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.75;
+  }
+  .insight-body .case {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    background: var(--cream);
+    border-radius: 6px;
+    padding: 10px 12px;
+    line-height: 1.6;
+    border-left: 2px solid rgba(180,160,120,0.3);
+  }
+  .insight-body .case strong { color: var(--accent-warm); }
+
+  /* ===== 适合谁 ===== */
+  .who-cards {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .who-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(60,50,30,0.07);
+    padding: 28px 22px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .who-card:hover { transform: translateY(-3px); }
+  .who-emoji { font-size: 2rem; margin-bottom: 10px; display: block; }
+  .who-card h4 {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .who-card p { font-size: 0.82rem; color: var(--ink-light); line-height: 1.55; }
+
+  /* ===== 页脚 ===== */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    opacity: 0.55;
+    line-height: 1.8;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 720px) {
+    .hero { height: 48vh; min-height: 300px; }
+    .hero-ribbon { right: 16px; width: 30px; height: 80px; font-size: 9px; }
+    .book-card { grid-template-columns: 1fr; justify-items: center; text-align: center; padding: 28px 24px; }
+    .book-cover { width: 120px; height: 168px; }
+    .book-cover-title { font-size: 15px; }
+    .meta-row { justify-content: center; }
+    .brain-cards { grid-template-columns: 1fr; }
+    .meta-how { grid-template-columns: 1fr; }
+    .bias-grid { grid-template-columns: 1fr; }
+    .ch-items { padding-left: 24px; }
+    .who-cards { grid-template-columns: 1fr 1fr; }
+    .big-quote { padding: 28px 24px 24px 40px; }
+    .insight-card { flex-direction: column; gap: 12px; }
+  }
+  @media (max-width: 420px) {
+    .who-cards { grid-template-columns: 1fr; }
+    .hero-content { padding: 32px 20px 24px; }
+  }
+
+  /* 打印 */
+  @media print {
+    body::before { display: none; }
+    .hero-ribbon, .floating-ribbon { display: none; }
+    .hero { height: auto; padding: 40px 0; background: #3a3226; }
+    section { padding: 28px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="floating-ribbon" id="fribbon">书签</div>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ribbon">书签</div>
+  <div class="hero-content">
+    <div class="hero-label">读书笔记 · 认知觉醒</div>
+    <h1 class="hero-title">认知觉醒</h1>
+    <p class="hero-sub">开启自我改变的原动力 — 周岭 著<br>用脑科学解释「懂了很多道理，却依然过不好这一生」</p>
+  </div>
+</header>
+
+<!-- ===== 书籍信息 ===== -->
+<section class="book-section">
+  <div class="wrap">
+    <div class="book-card">
+      <div class="book-cover">
+        <div class="book-cover-title">认知<br>觉醒</div>
+        <div class="book-cover-author">周 岭 著</div>
+      </div>
+      <div class="book-meta">
+        <h3>《认知觉醒》</h3>
+        <div class="meta-row">
+          <div class="meta-item">
+            <span class="meta-lbl">作者</span>
+            <span class="meta-val">周岭</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-lbl">领域</span>
+            <span class="meta-val">认知科学 · 个人成长</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-lbl">出版</span>
+            <span class="meta-val">2020 · 人民邮电出版社</span>
+          </div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-item">
+            <span class="meta-lbl">核心命题</span>
+            <span class="meta-val" style="color:var(--accent);font-weight:600;">
+              觉醒 = 激活元认知，让理智脑重新掌控人生
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 一句话总览 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">一句话总览</div>
+    <h2 class="sec-title">这本书到底在讲什么？</h2>
+    <div class="one-liner-box">
+      <p class="one-liner-text">
+        作者周岭在<strong>36岁</strong>之前和普通读者一样迷茫，36岁开始认知觉醒，<strong>3年内</strong>写出了这本微信读书评分90%的畅销书。《认知觉醒》用脑科学解释：为什么我们<strong>懂得很多道理，却依然过不好这一生</strong>——答案在于人类大脑的三重结构，以及<strong>元认知</strong>能力的缺失。觉醒，就是主动唤醒「站在第三视角观察自己思考」的能力。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 三重大脑 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">核心框架</div>
+    <h2 class="sec-title">三重大脑：你的内心为什么总在打架？</h2>
+    <p style="color:var(--ink-light); max-width:640px; margin-bottom:4px;">
+      人类大脑是「三合一」产物：本能脑（爬行动物脑）有1亿年历史，情绪脑（哺乳动物脑）有5000万年，而理智脑（新皮层）仅有250万年。这就好比一个公司里，两个资深老员工掌控全部资源，而新来的年轻CEO（理智脑）既没经验又没权力。
+    </p>
+
+    <div class="brain-cards">
+      <div class="brain-card b1">
+        <span class="brain-icon">🦎</span>
+        <div class="brain-name">本能脑</div>
+        <div class="brain-age">演化 · 1亿年</div>
+        <div class="brain-desc">掌管呼吸、心跳、战斗逃跑反应。追求<strong>安全</strong>、<strong>舒适</strong>、<strong>节能</strong>。一旦受到威胁，立刻接管全局。</div>
+        <div class="brain-pwr">💪 超强力量：能在0.1秒内让你心跳加速、肌肉紧绷，理智脑完全没有还手之力。</div>
+      </div>
+
+      <div class="brain-card b2">
+        <span class="brain-icon">🐵</span>
+        <div class="brain-name">情绪脑</div>
+        <div class="brain-age">演化 · 5000万年</div>
+        <div class="brain-desc">掌管喜怒哀乐、社交欲望、奖励机制。追求<strong>快乐</strong>、<strong>即时满足</strong>、<strong>群体认同</strong>。</div>
+        <div class="brain-pwr">💪 超强力量：能让你为了一个点赞通宵刷手机，或者为了一顿火锅放弃减肥计划。</div>
+      </div>
+
+      <div class="brain-card b3">
+        <span class="brain-icon">🧠</span>
+        <div class="brain-name">理智脑</div>
+        <div class="brain-age">演化 · 250万年</div>
+        <div class="brain-desc">掌管逻辑、规划、自控、元认知。知道<strong>长期主义</strong>是对的，但力量极其微弱。</div>
+        <div class="brain-pwr">⚠️ 致命弱点：理智脑就像公司里最聪明但最没权力的CEO——它提出的方案，本能脑和情绪脑分分钟就能否决。</div>
+      </div>
+    </div>
+
+    <div class="brain-verdict">
+      <strong>结论：</strong>你所有的「知道却做不到」，都不是因为你意志力差、不够努力，而是因为<strong>你的大脑结构就是这个设计</strong>。本能脑和情绪脑的力量，是理智脑的上百万倍。觉醒，就是学会用技巧「借力」，让本能脑和情绪脑为你工作，而不是和你作对。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 元认知 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">全书灵魂概念</div>
+    <h2 class="sec-title">元认知：拉开人与人差距的终极能力</h2>
+    <p style="color:var(--ink-light); max-width:660px; margin-bottom:4px;">
+      普通认知是「认知事物」，元认知是「<strong>认知自己的认知过程</strong>」。它能让你站在第三视角，观察自己在想什么、为什么会这样想、有没有更好的选择。作者说：「当一个人能主动开启第三视角、开始持续反思自己的思维和行为时，就意味着他真正开始觉醒了。」
+    </p>
+
+    <div class="meta-banner">
+      <h3>🔍 元认知的四个维度</h3>
+      <p>深度的底层规律 · 高度的全局视角 · 过去的前人智慧 · 未来的长期视角</p>
+
+      <div class="meta-how">
+        <div class="meta-how-card">
+          <div class="how-num">1</div>
+          <h4>冥想</h4>
+          <p>每天5-10分钟，把注意力放在呼吸上。每当发现注意力「走神」了，就把它柔和地拉回来。这就是在锻炼元认知肌肉。</p>
+        </div>
+        <div class="meta-how-card">
+          <div class="how-num">2</div>
+          <h4>反思日记</h4>
+          <p>每天回顾：今天有哪些决定是本能脑做的？有哪些情绪反应是不必要的？下次遇到类似情况，可以怎么做？</p>
+        </div>
+        <div class="meta-how-card">
+          <div class="how-num">3</div>
+          <h4>「想两遍再说」</h4>
+          <p>话到嘴边，先停2秒，问自己：这句话说了之后会有什么效果？有没有更好的表达方式？</p>
+        </div>
+        <div class="meta-how-card">
+          <div class="how-num">4</div>
+          <h4>第三视角</h4>
+          <p>在焦虑或愤怒时，想象自己是一个局外人，从外部观察「那个正在焦虑的人」。你会发现很多担心是多余的。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta-section">
+      <div class="tag">关联概念</div>
+      <h2 class="sec-title" style="margin-bottom:16px;">清晰力：行动力的真正来源</h2>
+      <div class="one-liner-box" style="border-left-color: #2980b9;">
+        <p class="one-liner-text">
+          <strong>「清晰力，也就是把目标细化、具体化的能力——行动力只有在清晰力的支撑下才能得到重构。」</strong><br><br>
+          模糊是行动的死敌。你之所以「知道要运动却不动」，不是因为懒，而是因为「运动」这个指令太模糊了。换成<strong>「换好运动服，出门右转跑800米」</strong>，阻力会骤降。大脑只能执行具体指令，不能执行模糊意图。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 热门金句 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">热门划线</div>
+    <h2 class="sec-title">6句被疯狂标注的话</h2>
+    <p style="color:var(--ink-light); max-width:640px; margin-bottom:4px;">
+      以下句子来自微信读书热门划线，是数万读者不约而同标亮的段落。每一句都值得你停下来想一分钟。
+    </p>
+
+    <div class="quotes-showcase">
+
+      <div class="big-quote q1">
+        <p class="big-quote-text">
+          「真正的觉醒是一种<em>发自内心的渴望</em>，立足长远，保持耐心，运用认知的力量与时间做朋友。」
+        </p>
+        <div class="big-quote-why">
+          <strong>为什么这条被最多人标注：</strong>因为它重新定义了「觉醒」。不是打鸡血，不是制定严苛计划，而是一种内在的、可持续的渴望。对应你：40岁重新出发，不是因为「应该」努力，而是找到了真正想做的事。
+        </div>
+        <div class="src" style="margin-top:12px;">— 自序</div>
+      </div>
+
+      <div class="big-quote q2">
+        <p class="big-quote-text">
+          「焦虑的原因就两条：<em>想同时做很多事，又想立即看到效果。</em>自己的欲望大于能力，又极度缺乏耐心。」
+        </p>
+        <div class="big-quote-why">
+          <strong>对应你的情况：</strong>潜在客户不足让你焦虑 → 本质是「想立刻看到效果」的天性在作祟。作者的解药：<strong>只做一件事，给它足够长的时间</strong>。你现在的「盯紧河南科技学院和新乡学院」，就是清晰力的体现。
+        </div>
+        <div class="src" style="margin-top:12px;">— 第一章 · 焦虑</div>
+      </div>
+
+      <div class="big-quote q3">
+        <p class="big-quote-text">
+          「<em>懂得百点不如改变一点。</em>真正的成长不在于自己懂得了多少道理，而在于自己<em>改变了多少</em>。」
+        </p>
+        <div class="big-quote-why">
+          <strong>这条扎心了：</strong>你读了《鞋狗》，很受触动——但如果你没有改变任何行为，这本书对你来说就等于没读。作者提出了「成长权重」概念：学习→思考→行动→改变，<strong>改变才是唯一的衡量标准</strong>。
+        </div>
+        <div class="src" style="margin-top:12px;">— 第五章 · 学习力</div>
+      </div>
+
+      <div class="big-quote q4">
+        <p class="big-quote-text">
+          「真正的学习成长不是『努力，努力再努力』，而是『<em>反馈，反馈再反馈</em>』。」
+        </p>
+        <div class="big-quote-why">
+          <strong>为什么你学了很多销售方法却用不出来：</strong>因为没有反馈回路。作者说：理智脑需要「看到进展」才能持续投入。把大目标拆成小里程碑，每完成一个就给自己一个明确的正向信号——这就是反馈。
+        </div>
+        <div class="src" style="margin-top:12px;">— 第五章 · 学习力</div>
+      </div>
+
+      <div class="big-quote q5">
+        <p class="big-quote-text">
+          「<em>多数人为了逃避真正的思考，愿意做任何事情。</em>」
+        </p>
+        <div class="big-quote-why">
+          <strong>全书最刺痛的一句话：</strong>刷手机、加班做琐碎的事、反复整理文件……这些「看起来很努力」的行为，本质上都是在逃避真正的思考。真正的思考是：这件事的核心困难是什么？我该怎么解决它？
+        </div>
+        <div class="src" style="margin-top:12px;">— 第四章 · 专注力</div>
+      </div>
+
+      <div class="big-quote q6">
+        <p class="big-quote-text">
+          「<em>小事听从你的脑，大事听从你的心。</em>需要用心去感受什么事情最让自己触动，而不是用脑去思考什么事情最有利。」
+        </p>
+        <div class="big-quote-why">
+          <strong>对应你的职业选择：</strong>用理性分析「哪个产品好卖、哪个客户预算多」是小事；但「我真正想在销售这件事上留下什么」是大事，需要用心去感受触动，而不是用脑去计算利弊。
+        </div>
+        <div class="src" style="margin-top:12px;">— 第六章 · 行动力</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 认知偏误 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">认知偏误</div>
+    <h2 class="sec-title">6个你每天都在犯的思维错误</h2>
+    <p style="color:var(--ink-light); max-width:640px; margin-bottom:4px;">
+      这些偏误是你做错决策、浪费时间、陷入焦虑的隐形元凶。元认知的训练目标，就是能及时识别出它们。
+    </p>
+
+    <div class="bias-grid">
+
+      <div class="bias-card b1">
+        <div class="bias-name">锚定效应</div>
+        <div class="bias-en">Anchoring Effect</div>
+        <div class="bias-def">第一印象或初始数字会像锚一样，牢牢固定你后续的判断，即使它完全不相关。</div>
+        <div class="bias-sales"><strong>销售场景：</strong>客户第一次听到你的报价时，那个数字就成了「锚」。如果你想让客户觉得值，先展示价值，再报价格——别让价格成为第一个锚。</div>
+      </div>
+
+      <div class="bias-card b2">
+        <div class="bias-name">损失厌恶</div>
+        <div class="bias-en">Loss Aversion</div>
+        <div class="bias-def">失去一样东西的痛苦，约是获得它的快乐的<strong>2.5倍</strong>。这导致人们极度保守。</div>
+        <div class="bias-sales"><strong>销售场景：</strong>客户更愿意为了避免损失而买单，而不是为了获得收益。「如果不做设备更新，3年后你们的检测能力将落后同行」比「买了这台设备能提升效率」更有说服力。</div>
+      </div>
+
+      <div class="bias-card b3">
+        <div class="bias-name">确认偏误</div>
+        <div class="bias-en">Confirmation Bias</div>
+        <div class="bias-def">我们主动寻找支持自己观点的证据，而忽略或贬低相反的证据。</div>
+        <div class="bias-sales"><strong>你的盲点：</strong>认定某个客户「不可能买」之后，你会不自觉地只注意支持这个判断的信息，而忽略他们可能有需求的信号。作者提醒：主动寻找反面证据。</div>
+      </div>
+
+      <div class="bias-card b4">
+        <div class="bias-name">框架效应</div>
+        <div class="bias-en">Framing Effect</div>
+        <div class="bias-def">同一个事实，用不同方式表述，会导致完全不同的决策。</div>
+        <div class="bias-sales"><strong>销售场景：</strong>「这台设备需要80万预算」vs「这台设备每月仅需1.1万，3年回本」——同一个事实，不同框架，客户的感受天差地别。</div>
+      </div>
+
+      <div class="bias-card b5">
+        <div class="bias-name">可得性偏误</div>
+        <div class="bias-en">Availability Heuristic</div>
+        <div class="bias-def">我们倾向于用「最容易想起」的信息来判断概率，而非真实数据。</div>
+        <div class="bias-sales"><strong>你的盲点：</strong>最近一次被客户拒绝的经历，会让你高估「被拒绝」的概率，从而不敢给下一个客户打电话。作者说：用数据对抗感觉。</div>
+      </div>
+
+      <div class="bias-card b6">
+        <div class="bias-name">认知闭合</div>
+        <div class="bias-en">Need for Cognitive Closure</div>
+        <div class="bias-def">面对模糊问题时，人们有强烈的欲望给它找出一个明确的答案——哪怕答案是错的。</div>
+        <div class="bias-sales"><strong>你的盲点：</strong>客户没有明确拒绝，但你受不了这种「不确定」，主动放弃了跟进。作者说：<strong>模糊是行动的死敌，但也可能是机会</strong>。学会在模糊中等待。</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 全书章节脉络 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">全书脉络</div>
+    <h2 class="sec-title">章节结构：从「知」到「行」的完整路径</h2>
+
+    <div class="chapter-tree">
+
+      <div class="ch-part p1">
+        <div class="ch-header"><span class="ch-num">Ⅰ</span><span>大脑篇：重新认识三重大脑</span></div>
+        <div class="ch-items">
+          <div class="ch-item">人类的三重大脑：本能脑、情绪脑、理智脑的<strong>权力结构</strong></div>
+          <div class="ch-item">焦虑的根源：欲望 &gt; 能力，且缺乏<strong>耐心</strong></div>
+          <div class="ch-item">复利效应：价值积累的前期缓慢，拐点后飞速增长</div>
+          <div class="ch-item">舒适区边缘：成长发生在舒适区的<strong>边缘</strong>，而非中心或外围</div>
+        </div>
+      </div>
+
+      <div class="ch-part p2">
+        <div class="ch-header"><span class="ch-num">Ⅱ</span><span>元认知篇：人类的终极能力</span></div>
+        <div class="ch-items">
+          <div class="ch-item">元认知是什么：<strong>第三视角</strong>观察自己的思考过程</div>
+          <div class="ch-item">提升元认知的4个方法：冥想、反思、阅读、<strong>晨间日记</strong></div>
+          <div class="ch-item">专注力：情绪和智慧的交叉地带，<strong>极度专注</strong>是唯一通道</div>
+          <div class="ch-item">学习力：深度学习的三层次——了解、关联、<strong>改变</strong></div>
+        </div>
+      </div>
+
+      <div class="ch-part p3">
+        <div class="ch-header"><span class="ch-num">Ⅲ</span><span>行动篇：从知道到做到</span></div>
+        <div class="ch-items">
+          <div class="ch-item">清晰力：把目标细化到<strong>「下一步行动」</strong>的程度</div>
+          <div class="ch-item">行动力：不是自制力的问题，是<strong>清晰力</strong>的问题</div>
+          <div class="ch-item">反馈学习：作品思维 + 费曼学习法 = <strong>真正的学会</strong></div>
+          <div class="ch-item">触动学习法：只取最触动自己的点，<strong>不追求全面</strong></div>
+        </div>
+      </div>
+
+      <div class="ch-part p4">
+        <div class="ch-header"><span class="ch-num">Ⅳ</span><span>觉醒篇：一流的生活是觉知</span></div>
+        <div class="ch-items">
+          <div class="ch-item">早起：用清晨时间<strong>重塑人生</strong>的复利效应</div>
+          <div class="ch-item">阅读：真正的读好一本书，需要数倍于阅读的时间来<strong>思考和实践</strong></div>
+          <div class="ch-item">动机转移：把「不想做但必须做」的事，变成<strong>「通过它获取另一种乐趣」</strong></div>
+          <div class="ch-item">结语：一流的生活不是富有，而是<strong>觉知</strong></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 对你的启发 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">与你相关</div>
+    <h2 class="sec-title">对你的5条具体启发</h2>
+    <p style="color:var(--ink-light); max-width:640px; margin-bottom:4px;">
+      以下是把这本书的核心观点，翻译成你40岁、做销售、在找潜客的具体情况。
+    </p>
+
+    <div class="insight-hero">
+      <h3>核心洞察：你的「潜在意向不足」，可能不全是市场问题</h3>
+      <p>作者说「认知影响选择，选择改变命运」。你16年销售经验是资产，但如果没有元认知去审视「我一直在用哪种方式开发客户」，经验反而会变成盲区。觉醒，从看见自己的默认模式开始。</p>
+    </div>
+
+    <div class="insight-cards">
+
+      <div class="insight-card">
+        <div class="insight-num">1</div>
+        <div class="insight-body">
+          <h4>用「下一步行动」破解销售跟进的拖延</h4>
+          <p>你有很多潜在客户，但总觉得「还没准备好」去跟进。作者说：模糊是行动的死敌。把「跟进新乡学院」拆成：① 打开客户资料文件夹 ② 找到张老师的论文方向 ③ 写一句话切入点。</p>
+          <div class="case"><strong>实操：</strong>每晚列出明天<strong>最具体的3件事</strong>（不是「跟进客户」，而是「给李主任发一条关于设备更新的微信」）。清晰力会给你行动力。</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">2</div>
+        <div class="insight-body">
+          <h4>「触动学习法」：别再试图记住所有产品参数</h4>
+          <p>作者说：打碎各家的认知体系，只取最触动自己的某一点。你不需要记住 Revvity 全线产品的所有参数——你只需要找到<strong>每个客户最触动的那一个点</strong>，把它讲透。</p>
+          <div class="case"><strong>实操：</strong>见客户前，问自己：「这个人最可能被哪个点触动？」然后只准备这一个点，用费曼的方式讲清楚。</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">3</div>
+        <div class="insight-body">
+          <h4>用「反馈回路」对抗销售的数字焦虑</h4>
+          <p>作者说：真正的学习成长不是努力再努力，而是反馈再反馈。销售也是一个需要反馈回路的工作——但如果你只盯着「最终成交」这个遥远的目标，情绪脑会让你放弃。</p>
+          <div class="case"><strong>实操：</strong>建立自己的反馈里程碑：① 发出第一封邮件 ② 拿到第一次回复 ③ 约到第一次见面。每完成一个，给自己一个<strong>明确的正向信号</strong>。让大脑「尝到」进展。</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">4</div>
+        <div class="insight-body">
+          <h4>第三视角：在被拒绝时观察自己</h4>
+          <p>作者说：元认知就是能在情绪涌上来时，启动第三视角观察自己。被客户拒绝是销售的家常便饭——但大多数人被拒绝后，情绪脑接管，要么愤怒要么逃避，理智脑彻底下线。</p>
+          <div class="case"><strong>实操：</strong>下次被拒绝后，先别说话，在心里说一句：「我注意到我现在感到失落。」这简单的一句话，就能激活元认知，让理智脑重新上线。</div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">5</div>
+        <div class="insight-body">
+          <h4>复利效应：你现在种下的种子，3年后会起飞</h4>
+          <p>作者说：复利效应前期增长非常缓慢，但到达拐点后会飞速增长。你2025年开始做 Revvity，现在还在「缓慢积累期」——这不意味着你做得不好，而是复利的客观规律。</p>
+          <div class="case"><strong>实操：</strong>每周花30分钟记录「这周我积累了什么」——不是销售额，而是<strong>认知、关系、认知客户的深度</strong>。这些是复利的基数。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 适合谁 ===== -->
+<section>
+  <div class="wrap">
+    <div class="tag">适读人群</div>
+    <h2 class="sec-title">这本书适合谁读？</h2>
+
+    <div class="who-cards">
+      <div class="who-card">
+        <span class="who-emoji">🧠</span>
+        <h4>焦虑的职场人</h4>
+        <p>觉得自己忙却没成果，知道很多却用不出来，想改变却总是三分钟热度</p>
+      </div>
+      <div class="who-card">
+        <span class="who-emoji">📈</span>
+        <h4>销售 / 创业者</h4>
+        <p>需要理解客户决策心理（认知偏误），也需要管理自己的能量和专注力</p>
+      </div>
+      <div class="who-card">
+        <span class="who-emoji">📚</span>
+        <h4>终身学习者</h4>
+        <p>读过很多书却感觉「没用」，需要学会深度学习和触动学习法</p>
+      </div>
+      <div class="who-card">
+        <span class="who-emoji">🔄</span>
+        <h4>想重启人生的人</h4>
+        <p>作者本人36岁才开始觉醒——这本书对所有「觉得晚了」的人是一剂良药</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; background:var(--cream-dark); border-radius:var(--radius); padding:24px 28px; font-size:0.88rem; color:var(--ink-light); line-height:1.7;">
+      <strong style="color:var(--accent);">⚠️ 不适合谁：</strong>期待「7天速成」「鸡汤式激励」的读者。这是一本需要思考、需要练习、甚至需要你「停下来想一分钟」的硬核认知书。如果你只想被激励一下，这本书可能会让你有点「累」。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>读书笔记 · 《认知觉醒》周岭 著 · 由 WorkBuddy 生成</p>
+  <p style="margin-top:8px;">真正的觉醒，是开始觉知自己的每一个念头、每一次情绪波动、每一个习惯性反应。</p>
+</footer>
+
+<script>
+  const fribbon = document.getElementById('fribbon');
+  window.addEventListener('scroll', () => {
+    fribbon.classList.toggle('visible', window.scrollY > 280);
+  });
+</script>
+
+</body>
+</html>
