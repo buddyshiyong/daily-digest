@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《影响力》读书笔记 — 湛庐经典</title>
+<style>
+:root {
+  --cream:       #f5f0e8;
+  --cream-dark:  #ebe4d4;
+  --ink:         #3a3226;
+  --ink-light:   #6b5e4e;
+  --accent:      #b5412c;
+  --ribbon:      #d14334;
+  --ribbon-dark: #a02e22;
+  --card:        #fffef9;
+  --shadow:      0 2px 16px rgba(60,50,30,0.10);
+  --radius:      10px;
+  --serif:       "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+  --sans:        "Noto Sans SC", "Source Han Sans SC", "PingFang SC", system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.85;
+  font-size: 16px;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 28px,
+    rgba(60,50,30,0.03) 28px,
+    rgba(60,50,30,0.03) 29px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === Ribbon === */
+.ribbon {
+  position: fixed;
+  top: 0;
+  right: 48px;
+  width: 44px;
+  height: 88px;
+  background: var(--ribbon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(160,46,34,0.3);
+}
+.ribbon::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: var(--ribbon-dark);
+}
+
+/* === Hero === */
+.hero {
+  position: relative;
+  height: 65vh;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600&q=80') center/cover;
+  filter: brightness(0.4) sepia(0.3);
+}
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(58,50,38,0.5) 0%, rgba(58,50,38,0.7) 100%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 700px;
+}
+.hero-content .tag {
+  display: inline-block;
+  padding: 4px 16px;
+  background: rgba(209,67,52,0.85);
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: 2px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.hero-content h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 48px);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+.hero-content .subtitle {
+  font-size: clamp(14px, 2.5vw, 18px);
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 1px;
+}
+
+/* === Content Wrapper === */
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* === Book Info Card === */
+.book-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  margin: -60px auto 40px;
+  max-width: 700px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.book-cover {
+  width: 120px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.book-meta {
+  flex: 1;
+  min-width: 200px;
+}
+.book-meta h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.book-meta .author {
+  color: var(--ink-light);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.book-meta .meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+}
+.book-meta .meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.book-meta .rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.book-meta .rating .score {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.book-meta .rating .label {
+  font-size: 13px;
+  color: var(--ink-light);
+}
+.book-meta .intro {
+  font-size: 14px;
+  color: var(--ink-light);
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+/* === Section === */
+.section {
+  margin-bottom: 48px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--cream-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 24px;
+  background: var(--ribbon);
+  border-radius: 2px;
+}
+
+/* === Overview Card === */
+.overview-card {
+  background: var(--card);
+  border-left: 4px solid var(--ribbon);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 24px 28px;
+  box-shadow: var(--shadow);
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.overview-card strong {
+  color: var(--accent);
+}
+
+/* === Framework Cards === */
+.framework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.framework-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  transition: transform 0.2s;
+  border-top: 3px solid var(--accent);
+}
+.framework-card .num {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--cream-dark);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.framework-card h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.framework-card p {
+  font-size: 14px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+/* === Highlight Quote === */
+.highlight-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.highlight-item .quote-mark {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-family: var(--serif);
+  font-size: 48px;
+  color: var(--cream-dark);
+  line-height: 1;
+}
+.highlight-item .quote-text {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.9;
+  padding-left: 28px;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+.highlight-item .quote-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 28px;
+  border-top: 1px solid var(--cream-dark);
+  padding-top: 12px;
+}
+.highlight-item .chapter-tag {
+  font-size: 12px;
+  color: var(--ink-light);
+  background: var(--cream);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.highlight-item .count-tag {
+  font-size: 12px;
+  color: var(--ribbon);
+  font-weight: 600;
+}
+.highlight-item .insight {
+  padding-left: 28px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+.highlight-item .insight::before {
+  content: '解读 · ';
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* === Concept Cards === */
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.concept-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  border-left: 3px solid var(--accent);
+}
+.concept-card h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.concept-card .def {
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-bottom: 8px;
+}
+.concept-card .example {
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--cream);
+  padding: 8px 12px;
+  border-radius: 6px;
+  line-height: 1.6;
+}
+
+/* === Chapter Outline === */
+.chapter-list {
+  list-style: none;
+}
+.chapter-list li {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.chapter-list .ch-num {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 36px;
+}
+.chapter-list .ch-content h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.chapter-list .ch-content p {
+  font-size: 13px;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+
+/* === Action Items === */
+.action-list {
+  list-style: none;
+}
+.action-list li {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 52px;
+}
+.action-list li::before {
+  content: counter(action-counter);
+  counter-increment: action-counter;
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  background: var(--ribbon);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-list {
+  counter-reset: action-counter;
+}
+.action-list li strong {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-size: 16px;
+}
+.action-list li p {
+  font-size: 14px;
+  color: var(--ink-light);
+  margin-top: 4px;
+  line-height: 1.7;
+}
+
+/* === Audience Cards === */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.audience-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  text-align: center;
+}
+.audience-card .icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.audience-card h4 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.audience-card p {
+  font-size: 13px;
+  color: var(--ink-light);
+  line-height: 1.5;
+}
+.audience-card.not-for {
+  opacity: 0.7;
+  border: 1px dashed var(--ink-light);
+}
+
+/* === Personal Notes === */
+.personal-note {
+  background: var(--cream-dark);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.personal-note .label {
+  font-size: 12px;
+  color: var(--ribbon);
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+.personal-note .text {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+/* === Footer === */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--ink-light);
+  font-size: 13px;
+  border-top: 1px solid var(--cream-dark);
+  margin-top: 40px;
+}
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  .ribbon { right: 18px; }
+  .book-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 20px;
+  }
+  .book-meta .meta-row {
+    justify-content: center;
+  }
+  .highlight-item .quote-text {
+    padding-left: 0;
+    font-size: 16px;
+  }
+  .highlight-item .quote-mark {
+    display: none;
+  }
+  .highlight-item .quote-meta,
+  .highlight-item .insight {
+    padding-left: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="ribbon"></div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="tag">湛庐经典 · 读书笔记</span>
+    <h1>影响力</h1>
+    <p class="subtitle">[美] 罗伯特·西奥迪尼 著 · 闾佳 译</p>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- Book Info Card -->
+  <div class="book-card">
+    <img class="book-cover" src="https://cdn.weread.qq.com/weread/cover/31/YueWen_823426/t6_YueWen_823426.jpg" alt="影响力（湛庐经典）">
+    <div class="book-meta">
+      <h2>影响力（湛庐经典）</h2>
+      <p class="author">[美] 罗伯特·西奥迪尼 著 · 闾佳 译</p>
+      <div class="meta-row">
+        <span>出版社：万卷出版公司</span>
+        <span>出版时间：2010-09</span>
+        <span>分类：社会心理学</span>
+        <span>ISBN：9787547012123</span>
+      </div>
+      <div class="rating">
+        <span class="score">8.3</span>
+        <span class="label">脍炙人口 · 24881 人评分</span>
+      </div>
+      <p class="intro">风靡全球30载的社会心理学经典。从互惠、承诺和一致、社会认同、喜好、权威、稀缺六大原则，解释了为什么有些人极具说服力，而我们总是容易上当受骗。《财富》杂志"75本商业必读书"之一，亚马逊"人生必读100本书"之一。</p>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="section">
+    <h3 class="section-title">一句话总览</h3>
+    <div class="overview-card">
+      这本书揭示了一个让人不太舒服的真相：<strong>人类的大脑在处理信息时，会大量使用"快捷方式"——即自动化的反应模式。</strong>而这些模式，正是说服者们的工具箱。西奥迪尼用大量实验和田野调查，归纳出六大"影响力武器"：互惠、承诺和一致、社会认同、喜好、权威、稀缺。每一种都能在不引发理性思考的情况下，触发我们的"是"按钮。
+    </div>
+  </div>
+
+  <!-- Core Framework -->
+  <div class="section">
+    <h3 class="section-title">六大影响力武器</h3>
+    <div class="framework-grid">
+      <div class="framework-card">
+        <div class="num">01</div>
+        <h3>互惠</h3>
+        <p>别人给了你什么好处，你会本能地想要回报。这种"欠债感"是人类社会的粘合剂，也是最容易被人利用的心理弱点。哪怕是没有人情味的、强加的恩惠，也能触发我们的亏欠感。</p>
+      </div>
+      <div class="framework-card">
+        <div class="num">02</div>
+        <h3>承诺和一致</h3>
+        <p>一旦作出了一个选择或采取了某种立场，你就会面临来自内心和人际的压力，迫使你的行为与之前的承诺保持一致。从小请求到大承诺，这就是"登门槛"的威力。</p>
+      </div>
+      <div class="framework-card">
+        <div class="num">03</div>
+        <h3>社会认同</h3>
+        <p>在判断何为正确时，我们会根据别人的意见行事。当所有人都在看别人怎么做时，结果就是——每个人都在看别人怎么做，却没有人真正在思考。</p>
+      </div>
+      <div class="framework-card">
+        <div class="num">04</div>
+        <h3>喜好</h3>
+        <p>我们更容易答应自己认识和喜欢的人提出的要求。外表魅力、相似性、赞美、接触与合作、条件反射式的关联——这些都是制造好感的开关。</p>
+      </div>
+      <div class="framework-card">
+        <div class="num">05</div>
+        <h3>权威</h3>
+        <p>权威的压力能够轻易抹杀一个人独立思考的能力。哪怕只是看起来像权威的符号——头衔、衣着、排场——都足以让人按下"服从"按钮。</p>
+      </div>
+      <div class="framework-card">
+        <div class="num">06</div>
+        <h3>稀缺</h3>
+        <p>机会越少，价值似乎越高。失去某种东西的恐惧，比获得同一物品的渴望，更能激发行动力。"数量有限""最后期限"——这是你最熟悉的销售话术，也是最难抵抗的心理陷阱。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popular Highlights -->
+  <div class="section">
+    <h3 class="section-title">热门划线 · 被万人标注的句子</h3>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">事实上，我们所有人都会一次次地欺骗自己，以便在作出选择之后，坚信自己做得没错。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第3章 承诺和一致</span>
+        <span class="count-tag">12,852 人划线</span>
+      </div>
+      <p class="insight">这是全书被标注最多的句子。"承诺和一致"的杀伤力在于：它不仅改变你的行为，还改变你的自我认知。一旦你开口答应了，大脑会主动帮你"合理化"这个决定。对销售来说，这意味着——让客户先说"是"，比让客户最终说"是"更重要。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">我们在要别人帮忙的时候，要是能给一个理由，成功的概率会更大。因为人就是单纯地喜欢做事有个理由。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第1章 影响力的武器</span>
+        <span class="count-tag">9,552 人划线</span>
+      </div>
+      <p class="insight">注意：这个理由甚至不需要是"好理由"。实验证明，只要句子里包含"因为"这个词，顺从率就会显著提升。人类的自动反应模式对"理由信号"的敏感程度，远超过对理由本身质量的判断。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">在我们以个人成就为傲的时候，我们不会沾别人的光。只有当我们在公在私的威望都很低的时候，我们才会想借助他人成功来恢复自我形象。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第5章 喜好</span>
+        <span class="count-tag">9,231 人划线</span>
+      </div>
+      <p class="insight">这条揭示了"关联"的心理学底层：你看到球迷在主队赢球后穿印有队徽的衣服，在输球后却不穿——他们用他人的成功来修补自己的形象。当你觉得自己在某方面不够好时，会不自觉地靠近那些"发光"的人和事。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">一般来说，在我们自己不确定、情况不明或含糊不清、意外性太大的时候，我们最有可能觉得别人的行为是正确的。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第4章 社会认同</span>
+        <span class="count-tag">8,720 人划线</span>
+      </div>
+      <p class="insight">社会认同在"不确定性"最高的时候威力最大。这就是为什么在陌生领域，人们最依赖评价、销量和口碑。当客户对你推荐的产品不熟悉时，他不是在评估参数——他是在看"别人怎么选"。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">只有当我们认为外界不存在强大的压力时，我们才会为自己的行为发自内心地负起责任。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第3章 承诺和一致</span>
+        <span class="count-tag">5,955 人划线</span>
+      </div>
+      <p class="insight">这对管理和教育有深远意义：用威胁或奖励"逼"出来的行为，一旦外部压力消失就会立刻停止。要让人真正内化一个行为，就必须让他觉得"这是我自己选的"，而不是"我不得不这样做"。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">对失去某种东西的恐惧，似乎要比对获得同一物品的渴望，更能激发人们的行动力。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第7章 稀缺</span>
+        <span class="count-tag">4,190 人划线</span>
+      </div>
+      <p class="insight">损失厌恶的底层逻辑。在销售场景中，"这个优惠后天就结束了"比"现在买可以优惠"更有杀伤力。"怕错过"永远比"想得到"更能驱动行动。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">自由这种东西，给一点又拿走，比完全不给更危险。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第7章 稀缺</span>
+        <span class="count-tag">4,236 人划线</span>
+      </div>
+      <p class="insight">这解释了为什么"先给你试用，再收回"比"从一开始就收费"更容易让人掏钱。也解释了为什么"限制升级"会引发强烈反弹——人们不怕从未拥有的东西，但极其痛恨"曾经拥有又被拿走"。</p>
+    </div>
+
+    <div class="highlight-item">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">费尽周折才得到某样东西的人，比轻轻轻松就得到的人，对这件东西往往更为珍视。</p>
+      <div class="quote-meta">
+        <span class="chapter-tag">第3章 承诺和一致</span>
+        <span class="count-tag">4,998 人划线</span>
+      </div>
+      <p class="insight">这解释了兄弟会的入会折磨、公司的层层面试、以及"来之不易"的客户忠诚度。付出的成本越高，越会自我说服"这是值得的"——因为承认"不值"等于承认自己是傻子。</p>
+    </div>
+  </div>
+
+  <!-- Concept Cards -->
+  <div class="section">
+    <h3 class="section-title">关键概念卡片</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h4>对比原理</h4>
+        <p class="def">先呈现一个贵的，再呈现一个便宜的后者的价格感知会被拉低。</p>
+        <div class="example">你去买西装，先看了3000的，再看800的领带，就会觉得领带"不贵"。但如果先看领带，你会觉得800的领带贵得离谱。</div>
+      </div>
+      <div class="concept-card">
+        <h4>登门槛技巧</h4>
+        <p class="def">先提一个小请求，再提一个大请求。小请求改变自我认知，大请求顺理成章。</p>
+        <div class="example">先让你同意在窗户上贴一张小贴纸"支持安全驾驶"，两周后请你在前院竖一块巨大且难看的交通标志牌，同意率飙升到76%。</div>
+      </div>
+      <div class="concept-card">
+        <h4>抛低球手法</h4>
+        <p class="def">先给一个甜头让你做决定，等决定做好后，再巧妙取消甜头。</p>
+        <div class="example">车商报了一个极低价，你决定买了。然后"发现"某个选项没算进去，最终价格上浮。但你已经做好了"我要买这辆车"的心理承诺，多半不会反悔。</div>
+      </div>
+      <div class="concept-card">
+        <h4>多元无知</h4>
+        <p class="def">紧急情况下，每个人都看别人怎么做，结果所有人都不行动。</p>
+        <div class="example">如果在街上晕倒，周围有5个人比你获得救助的概率，比周围只有1个人时更小——因为每个人都在等别人先动。</div>
+      </div>
+      <div class="concept-card">
+        <h4>相似性好感</h4>
+        <p class="def">我们喜欢与自己相似的人，无论相似点在观点、个性、背景还是生活方式。</p>
+        <div class="example">销售员"不经意"提到自己也在同一个城市住过、孩子也上同一所学校——你不知道这些"巧合"是调查过的还是编的，但你的好感已经升起来了。</div>
+      </div>
+      <div class="concept-card">
+        <h4>条件反射式关联</h4>
+        <p class="def">把产品和正面事物放在一起，好感会自动"沾"到产品上。</p>
+        <div class="example">汽车展上永远站着漂亮模特，午餐时间新闻播报员总是阳光积极的。你的大脑把"好看"和"好"绑在了一起——这不是你的理性在做判断。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter Outline -->
+  <div class="section">
+    <h3 class="section-title">全书章节脉络</h3>
+    <ul class="chapter-list">
+      <li>
+        <span class="ch-num">1</span>
+        <div class="ch-content">
+          <h4>影响力的武器</h4>
+          <p>引入"自动反应模式"概念：动物和人类都有触发固定行为的"按钮"。理解这个机制，是理解所有影响力武器的基石。对比原理是第一个被揭示的武器。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">2</span>
+        <div class="ch-content">
+          <h4>互惠</h4>
+          <p>人类社会最强大的规则之一。别人给你好处，你就有亏欠感。这种亏欠感会驱使你做出远大于所受恩惠的回报。拒绝-退让策略也是互惠的变体。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">3</span>
+        <div class="ch-content">
+          <h4>承诺和一致</h4>
+          <p>全书最厚的一章。承诺改变自我认知，一致性压力维持行为。从小承诺到大承诺、从公开承诺到书面承诺、从被动承诺到主动承诺——每一步都在加固"我就是这种人"的身份认同。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">4</span>
+        <div class="ch-content">
+          <h4>社会认同</h4>
+          <p>"别人怎么做"是我们判断正确与否的捷径。在不确定性高的情况下尤其如此。多元无知、维特效应、相似性——社会认同的三种变体都有危险的应用场景。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">5</span>
+        <div class="ch-content">
+          <h4>喜好</h4>
+          <p>我们答应喜欢的人的请求，比答应不喜欢的人的请求容易得多。外表魅力、相似性、赞美、接触与合作、条件反射——制造好感的五个开关。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">6</span>
+        <div class="ch-content">
+          <h4>权威</h4>
+          <p>米尔格拉姆实验的震撼：普通人在权威命令下愿意对无辜者施加致命电击。头衔、衣着、排场——权威的三种符号，每一种都足以关闭人的独立思考。</p>
+        </div>
+      </li>
+      <li>
+        <span class="ch-num">7</span>
+        <div class="ch-content">
+          <h4>稀缺</h4>
+          <p>数量有限、时间有限、先到先得——稀缺不只影响对价值的判断，还影响对质量的判断。心理抗拒理论解释了为什么"被限制"会激发"更想要"。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Personal Highlights -->
+  <div class="section">
+    <h3 class="section-title">我的划线</h3>
+    <div class="personal-note">
+      <div class="label">第2章 互惠</div>
+      <p class="text">由于互惠安排在人类社会体制下极其重要，一旦欠了人情债，我们就条件反射般的感到不舒服。</p>
+    </div>
+    <div class="personal-note">
+      <div class="label">第1章 影响力的武器</div>
+      <p class="text">它完全取决于最先展示的物品的价格。——对比原理的精髓：感知是相对的，不是绝对的。</p>
+    </div>
+    <div class="personal-note">
+      <div class="label">第1章 影响力的武器</div>
+      <p class="text">实验想要说明的要点是，基于先前所发生事件的性质，相同的东西（也即常温的水）会显得极为不同。</p>
+    </div>
+    <div class="personal-note">
+      <div class="label">第1章 影响力的武器</div>
+      <p class="text">不过，人类之外的生物大多都是本能的响应序列，人类却不同，我们的自动磁带通常来自通过经验习得的心理原则或范式。</p>
+    </div>
+    <div class="personal-note">
+      <div class="label">第1章 影响力的武器</div>
+      <p class="text">他要做的是，激发出环境中业已存在的强大影响力，并将它指向特定的目标。——柔道比拳击高明之处：不靠自己发力，而是利用对方已有的势能。</p>
+    </div>
+    <div class="personal-note">
+      <div class="label">第1章 影响力的武器 · 想法</div>
+      <p class="text">读到"林登·约翰逊"时想到：《硬球》这本书也提到了类似的权力运作逻辑——政治和销售的本质都是影响力。</p>
+    </div>
+  </div>
+
+  <!-- Action Items -->
+  <div class="section">
+    <h3 class="section-title">行动启发</h3>
+    <ul class="action-list">
+      <li>
+        <strong>先要"小是的"，再要"大是的"</strong>
+        <p>你有很多想推进的事，但总觉得"还没准备好"。先做一个最小的承诺动作——发一条消息、约一次见面、写一页方案。一旦行动了，"一致性"会帮你推着往前走。不要等"万事俱备"才开始，因为"开始"本身就是最好的准备。</p>
+      </li>
+      <li>
+        <strong>善用"因为"这个词</strong>
+        <p>在请求别人帮忙时，不管你的理由是否完美，加上"因为……"就能显著提升成功率。你的客户、同事、家人都一样——他们需要的不是完美的理由，而是"一个理由"这个信号本身。</p>
+      </li>
+      <li>
+        <strong>制造"来之不易"的体验</strong>
+        <p>你推荐的东西，如果让客户觉得"随便就能拿到"，他不会珍惜。适当增加"获取门槛"——比如限量、限时、需要申请审核——不是套路，而是让客户对价值的感知与实际价值匹配。</p>
+      </li>
+      <li>
+        <strong>注意你的"对比锚点"</strong>
+        <p>在展示方案时，先呈现一个"标杆方案"（贵的/全配的），再呈现你的推荐方案。这不是欺骗——你给的是真实选项，但"对比原理"会让推荐方案显得更合理。反过来，如果先报低价再涨，客户会觉得被欺骗。</p>
+      </li>
+      <li>
+        <strong>警惕别人对你用稀缺</strong>
+        <p>下次听到"这是最后一个名额""优惠今晚截止"时，按下暂停键，问自己一个问题："如果不是稀缺的，我还想要吗？"如果答案是"不"，那你想要的不是这个东西，而是"不失去"的感觉。</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Audience -->
+  <div class="section">
+    <h3 class="section-title">适合谁读</h3>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="icon">💼</div>
+        <h4>商业与销售从业者</h4>
+        <p>你每天都在使用和遭遇影响力武器。读这本书不是为了"套路"别人，而是知道自己在什么时候被"套路"了。</p>
+      </div>
+      <div class="audience-card">
+        <div class="icon">🧠</div>
+        <h4>想理解决策心理的人</h4>
+        <p>你以为自己的决定是理性的？这本书会用实验告诉你：大部分时候，你只是在执行一个"自动程序"。</p>
+      </div>
+      <div class="audience-card">
+        <div class="icon">👥</div>
+        <h4>管理者与教育者</h4>
+        <p>想让团队或学生"发自内心"地行动？第3章"承诺和一致"是你必读的内容——外部压力产生的是服从，内部认同产生的才是改变。</p>
+      </div>
+      <div class="audience-card">
+        <div class="icon">🔄</div>
+        <h4>在事业中段寻求突破的人</h4>
+        <p>你积累了足够的经验，但感觉在新领域"破冰"时，努力和回报不成正比。这本书帮你重新审视：你是在"说服"别人，还是在"触发"别人的自动反应？</p>
+      </div>
+      <div class="audience-card not-for">
+        <div class="icon">❌</div>
+        <h4>不适合谁</h4>
+        <p>期待"速成话术手册"的人。这本书是心理学底层逻辑，不是"三句话让客户下单"的段子集。它改变的是你理解人性的方式，不是你的台词表。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>读书笔记 · 基于《影响力（湛庐经典）》罗伯特·西奥迪尼 著</p>
+  <p style="margin-top:8px;">热门划线数据来源：微信读书 · 生成日期：2026-07-04</p>
+</div>
+
+</body>
+</html>
