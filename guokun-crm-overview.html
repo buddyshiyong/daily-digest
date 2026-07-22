@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国坤·AI开发记录：客户管理 + 商机跟踪系统</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#fff; --ink:#1f2933; --sub:#5b6b7b;
+    --brand:#1f77b4; --brand2:#155724; --line:#e3e8ef; --chip:#eef3f8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7}
+  .wrap{max-width:880px;margin:0 auto;padding:40px 22px 70px}
+  header.hero{background:linear-gradient(135deg,#1f77b4,#155724);color:#fff;border-radius:16px;
+    padding:38px 34px;box-shadow:0 10px 30px rgba(31,119,180,.25)}
+  header.hero h1{margin:0 0 10px;font-size:30px;letter-spacing:.5px}
+  header.hero p{margin:0;opacity:.92;font-size:15px}
+  .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+    padding:3px 10px;border-radius:999px;font-size:12px;margin:10px 8px 0 0}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:26px 28px;margin-top:22px;box-shadow:0 2px 10px rgba(31,41,51,.04)}
+  h2{font-size:20px;margin:0 0 14px;color:var(--brand);border-left:4px solid var(--brand);padding-left:10px}
+  h3{font-size:15px;margin:18px 0 6px;color:var(--ink)}
+  p{margin:8px 0;color:var(--sub);font-size:14.5px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px}
+  .feat{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fafcff}
+  .feat b{color:var(--ink)}
+  .stat{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 2px}
+  .stat div{background:var(--chip);border-radius:10px;padding:10px 16px;text-align:center;min-width:96px}
+  .stat .n{font-size:22px;font-weight:700;color:var(--brand)}
+  .stat .l{font-size:12px;color:var(--sub)}
+  code{background:#eef1f5;padding:2px 6px;border-radius:5px;font-size:13px;color:#b5341f}
+  .step{border-left:3px solid var(--brand2);padding:6px 0 6px 16px;margin:10px 0}
+  .step b{color:var(--brand2)}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f0f4f8;color:var(--ink)}
+  .note{background:#fff8e6;border:1px solid #f0d98a;border-radius:10px;padding:14px 16px;color:#7a5b00;font-size:13.5px}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;margin-top:30px}
+  ul{margin:8px 0;padding-left:20px;color:var(--sub);font-size:14.5px}
+  li{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>国坤 · AI 开发记录</h1>
+    <p>用对话式 AI 从零搭了一套销售 CRM：客户管理 + 商机跟踪系统</p>
+    <div>
+      <span class="tag">Python · Streamlit · SQLite</span>
+      <span class="tag">零外部依赖 · 自托管</span>
+      <span class="tag">2026-07 搭建</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>一句话定位</h2>
+    <p>把散落在 Excel / Word 里的<strong>客户地图</strong>，变成可跟踪的「单位 → 人 → 公示项目 → 商机」一条线；
+       并对每条商机做 <strong>A/B/C 自动分级</strong> 和决策链、竞争、行动、成交条件、跟进的全流程管理。</p>
+    <div class="stat">
+      <div><div class="n">150</div><div class="l">客户单位</div></div>
+      <div><div class="n">436</div><div class="l">联系人</div></div>
+      <div><div class="n">134</div><div class="l">设备产品</div></div>
+      <div><div class="n">A/B/C</div><div class="l">四要素分级</div></div>
+    </div>
+    <p style="margin-top:12px">* 数字为系统当前沉淀的聚合量（行业覆盖河南高校 / 科研院所 / 医院 / 疾控等），不含任何可识别个人明细。</p>
+  </section>
+
+  <section>
+    <h2>核心功能模块</h2>
+    <div class="grid">
+      <div class="feat"><b>① 客户地图导入</b><br>Excel(.xlsx/.xls) + Word(.docx) 双源导入，按单位名去重合并；支持「整文件=1 单位」「按 sheet=单位」「按行=单位」三种粒度。</div>
+      <div class="feat"><b>② 客户 360° 视图</b><br>单位信息 + 联系人 + 公示项目 + 关联商机 + 跟进时间线，一页看全。</div>
+      <div class="feat"><b>③ 商机 A/B/C 分级</b><br>我方产品(+2) + 招标时间(+2) + 预算(+1) + 联系人(+1)，自动定级，超 7 天未跟进标红。</div>
+      <div class="feat"><b>④ 公示项目 → 转商机</b><br>监控到的采购公示一键转成商机并双向关联，对接人跟着挂上。</div>
+      <div class="feat"><b>⑤ 决策链 MEDDPICC</b><br>记录签字人 / 预算 Owner / 技术评审 / Champion 等角色、态度、影响力。</div>
+      <div class="feat"><b>⑥ 竞争 / 行动 / 成交条件</b><br>竞争态势评分、行动推进清单、成交条件核对、跟进记录。</div>
+      <div class="feat"><b>⑦ 产品库</b><br>导入 Revvity 设备清单（进口线 + 国产新波线），新建商机时按产品线联动选具体型号、自动带金额。</div>
+      <div class="feat"><b>⑧ 新建/编辑联动</b><br>所属单位、对接人下拉选择 + 可新建，自动回写客户关联，告别纯文本乱填。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>AI 在开发里到底干了啥（关键 Bug 修复记录）</h2>
+    <p>这套系统不是「一次生成就完事」，而是在多轮对话里边写边测、逐个排雷。以下是 AI 定位并修复的几个典型问题：</p>
+
+    <div class="step"><b>docx 客户地图漏导入</b>：原代码用 <code>'负责销售' in hdr</code>（hdr 是列表）做判断，实际单元格是「负责销售（没有可空着）」，精确匹配失败 → 整批中医药单位被静默跳过；另农口 docx 表头在第 1 行而非第 0 行。改为字符串包含判断 + 动态定位表头后，单位数从 23 恢复到 150。</div>
+
+    <div class="step"><b>INSERT 列值错位（数据污染）</b>：<code>save_project</code> 的 INSERT 列顺序与值元组顺序不一致，从第 13 列起全部错位 —— <code>customer_id/contact_id</code> 写成时间戳、单位/联系人 id 错写进备注字段。修复后新建商机的客户关联全部正确，并修正了被污染的存量记录。</div>
+
+    <div class="step"><b>Excel 导入列映射错</b>：原导入把「序号」列当客户名，产生 991 条垃圾；真实线索仅 12 条。改为读正确的客户名称列并按真实列映射。</div>
+
+    <div class="step"><b>其它</b>：导入未建表保护、同名线索被去重吞掉、等级写死不自动算、表单裸 <code>st.</code> 前缀报错等，均已修复。</div>
+
+    <p style="margin-top:12px">结论：<strong>AI 的价值不止在「写初版」，更在「能跑通 + 能排错 + 能端到端验证」</strong>。每个修复都有冒烟测试回读落库值确认。</p>
+  </section>
+
+  <section>
+    <h2>怎么跑起来</h2>
+    <p>环境用本机托管的 Python（已装 streamlit / pandas / openpyxl）：</p>
+    <p><code>python -m streamlit run crm_tracker.py --server.port 8501</code></p>
+    <p>浏览器打开 <code>http://localhost:8501</code>。左侧导航：仪表盘 / 新建商机 / 客户管理 / Excel导入 / 使用说明。</p>
+    <p>数据全部在本地单文件 <code>crm_data.db</code>（SQLite），不上云、不依赖任何外部服务。</p>
+  </section>
+
+  <section>
+    <h2>数据说明（为什么这页没有客户名单）</h2>
+    <div class="note">本页是「项目情况 / 开发记录」的<strong>脱敏概览</strong>。系统里实际沉淀的是真实客户地图（单位、联系人姓名、研究方向等），属于商业敏感信息，
+    <strong>不随源码或本页上传到任何公开仓库</strong>。如需对外展示，只展示聚合量（如上面的数字）与功能架构，不暴露可识别个人 / 单位明细。</div>
+  </section>
+
+  <section>
+    <h2>当前状态 & 下一步</h2>
+    <table>
+      <tr><th>模块</th><th>状态</th></tr>
+      <tr><td>客户地图导入（Excel+Word）</td><td>✅ 已验证（150 单位 / 436 联系人）</td></tr>
+      <tr><td>商机表单单位/对接人联动</td><td>✅ 已验证</td></tr>
+      <tr><td>公示项目转商机联动</td><td>✅ 已验证（双向关联）</td></tr>
+      <tr><td>存量老商机关联客户单位</td><td>⏳ 建议手动在编辑页选单位（按"不臆测"原则未自动绑定）</td></tr>
+      <tr><td>省政府采购网简报自动导入</td><td>⏳ 预留接口，待你的监控简报程序导出对齐格式</td></tr>
+    </table>
+  </section>
+
+  <footer>由对话式 AI 协助开发 · 自托管 CRM · 本地数据不出本机</footer>
+</div>
+</body>
+</html>
