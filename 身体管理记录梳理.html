@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身体管理记录与知识梳理</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --line:#e7e3da; --accent:#3a7d6e; --warn:#c98a1b; --todo:#9aa0a6;
+    --ok:#3a7d6e; --shadow:0 1px 3px rgba(0,0,0,.06),0 6px 18px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+    line-height:1.75;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+  header{border-bottom:2px solid var(--line);padding-bottom:20px;margin-bottom:32px}
+  h1{font-size:28px;margin:0 0 8px;letter-spacing:.5px}
+  .meta{color:var(--sub);font-size:14px}
+  h2{font-size:20px;margin:40px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:16px;margin:26px 0 8px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;box-shadow:var(--shadow);font-size:15px}
+  .lead b{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:18px 0;background:var(--card);
+    border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:14px}
+  th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+  th{background:#f3f1ea;font-weight:600}
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;white-space:nowrap}
+  .ok{background:#e4f1ec;color:var(--ok)}
+  .warn{background:#fbf0db;color:var(--warn)}
+  .todo{background:#eef0f1;color:var(--todo)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin:16px 0;box-shadow:var(--shadow)}
+  .card h3{margin-top:4px}
+  ul{margin:8px 0;padding-left:22px}
+  li{margin:6px 0}
+  .note{background:#f7f4ee;border-left:4px solid var(--warn);border-radius:8px;
+    padding:14px 18px;margin:14px 0;font-size:14px}
+  .sec-label{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
+  footer{margin-top:48px;color:var(--sub);font-size:13px;text-align:center;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>身体管理记录与知识梳理</h1>
+    <div class="meta">整理日期：2026-07-26 ｜ 记录人：国坤</div>
+  </header>
+
+  <div class="lead">
+    <b>核心认知：</b>最近最大的体会——锻炼和放松，对身体特别重要。下面把近期在做的、了解到的身体管理动作系统梳理一遍，方便坚持和迭代。
+  </div>
+
+  <h2>一图速览（10 项）</h2>
+  <table>
+    <thead>
+      <tr><th>序号</th><th>项目</th><th>类别</th><th>频率 / 时长</th><th>状态</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>护腰三动作</td><td>护腰</td><td>每天约 5 分钟</td><td><span class="tag ok">坚持1个多月·有效</span></td></tr>
+      <tr><td>2</td><td>4-4-2-7 呼吸法</td><td>专注力</td><td>零散做过十几次</td><td><span class="tag warn">未养成习惯</span></td></tr>
+      <tr><td>3</td><td>躺下动作（8 个）</td><td>放松/出汗</td><td>一周3-4次，15分钟</td><td><span class="tag ok">已坚持</span></td></tr>
+      <tr><td>4</td><td>发声训练</td><td>发声</td><td>—</td><td><span class="tag todo">未开始</span></td></tr>
+      <tr><td>5</td><td>单腿站立</td><td>交感神经</td><td>—</td><td><span class="tag todo">未开始</span></td></tr>
+      <tr><td>6</td><td>站桩</td><td>站桩</td><td>—</td><td><span class="tag todo">未开始</span></td></tr>
+      <tr><td>7</td><td>快走</td><td>代谢/瘦身</td><td>最近2-3周，12分钟/次</td><td><span class="tag ok">进行中</span></td></tr>
+      <tr><td>8</td><td>躺下放松系列（腰/大腿/背）</td><td>放松</td><td>—</td><td><span class="tag todo">新发现·未开始</span></td></tr>
+      <tr><td>9</td><td>手表久坐提醒</td><td>日常提醒</td><td>久坐即提醒，基本执行</td><td><span class="tag ok">已融入日常</span></td></tr>
+      <tr><td>10</td><td>羽毛球</td><td>运动</td><td>月1-2次，1-2小时</td><td><span class="tag ok">周末活动</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>分类详述</h2>
+
+  <p class="sec-label">A · 已坚持成习惯（继续做）</p>
+
+  <div class="card">
+    <h3>1. 护腰三动作</h3>
+    <ul>
+      <li>来源：视频号刷到的</li>
+      <li>触发场景：久坐、用力时</li>
+      <li>做法：三个动作，每次约 5 分钟</li>
+      <li>坚持：1 个多月</li>
+      <li>反馈：感觉有一定效果</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>2. 躺下动作（8 个动作）</h3>
+    <ul>
+      <li>时长：约 15 分钟</li>
+      <li>反应：会出汗</li>
+      <li>频率：基本一周 3-4 次</li>
+      <li>作用：放松身体</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>3. 快走</h3>
+    <ul>
+      <li>时间：最近 2-3 周</li>
+      <li>路线：围着小区快走两圈</li>
+      <li>时长：约 12 分钟</li>
+      <li>听说的作用：加强代谢；比跑步对瘦身效率更高（待个人验证）</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>4. 手表久坐提醒</h3>
+    <ul>
+      <li>设置：手表在久坐后提醒站起来</li>
+      <li>执行：一般遵照提醒站起来一下</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>5. 羽毛球</h3>
+    <ul>
+      <li>频率：周末，一般一个月 1-2 次</li>
+      <li>时长：每次 1-2 小时</li>
+    </ul>
+  </div>
+
+  <p class="sec-label">B · 进行中，尚未养成习惯</p>
+  <div class="card">
+    <h3>4-4-2-7 呼吸法</h3>
+    <ul>
+      <li>作用：锻炼专注力</li>
+      <li>执行情况：做了十几次</li>
+      <li>状态：还没养成习惯</li>
+    </ul>
+  </div>
+
+  <p class="sec-label">C · 了解但还没做过</p>
+  <div class="card">
+    <ul>
+      <li><b>发声训练</b>：未开始</li>
+      <li><b>单腿站立</b>：听说可加强交感神经；未开始</li>
+      <li><b>站桩</b>：未试过</li>
+      <li><b>躺下放松系列</b>：最近发现——躺下后可以做很多动作，围绕腰部放松、大腿放松、背部肌肉放松；还没进行过</li>
+    </ul>
+  </div>
+
+  <h2>观察与下一步</h2>
+  <div class="note">
+    <ul>
+      <li><b>已有动作可整合</b>：躺下动作（已有）和躺下放松系列（新发现）都发生在"躺下"场景，可合并成一套睡前放松流程，一次完成。</li>
+      <li><b>呼吸法靠"习惯叠加"</b>：目前零散做、没成习惯。建议绑到一个固定动作上（比如每天快走前或躺下后做一组），用已有习惯带动新习惯。</li>
+      <li><b>未开始项先挑一个试点</b>：单腿站立 / 站桩 / 发声训练三选一，先试 1-2 周，别同时上，避免坚持不住。</li>
+      <li><b>记录效果</b>：护腰动作已感到有效，建议继续；快走"比跑步瘦身效率高"是听来的说法，可自己观察体重 / 体感来验证。</li>
+    </ul>
+  </div>
+
+  <footer>本文由个人身体记录梳理而成 · 同步发布于腾讯文档与 GitHub Pages</footer>
+</div>
+</body>
+</html>
