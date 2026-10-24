@@ -26,6 +26,9 @@
   <a class="latest-link" href="./2026-10-24.html">👉 查看今日文摘（2026年10月24日）</a>
   <div class="archive">
     <p style="margin-top:24px; font-size:13px; color:#bbb;">— 往期文摘 —</p>
+    <input id="archive-search" type="text" placeholder="🔍 搜索日期，如 10-24 或 2026年8月"
+           style="display:block;width:100%;max-width:320px;margin:10px auto 14px;padding:8px 14px;font-size:14px;border:1px solid #ddd;border-radius:20px;outline:none;background:#fff;">
+    <p id="archive-empty" style="display:none;font-size:13px;color:#bbb;margin:12px 0;">没有匹配的文摘</p>
 <a href="./2026-10-24.html">2026年10月24日</a>
 <a href="./2026-10-23.html">2026年10月23日</a>
 <a href="./2026-10-22.html">2026年10月22日</a>
@@ -118,6 +121,28 @@
 <a href="./2026-07-02.html">2026年7月2日</a>
   </div>
 </div>
+<script>
+(function(){
+  var input = document.getElementById('archive-search');
+  var empty = document.getElementById('archive-empty');
+  var links = Array.from(document.querySelectorAll('.archive a'));
+  input.addEventListener('input', function(){
+    var q = input.value.trim();
+    var shown = 0;
+    links.forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      var datePart = href.replace('./','').replace('.html','');
+      var label = a.textContent;
+      var hit = !q || label.indexOf(q) > -1 || datePart.indexOf(q) > -1
+                || (q.indexOf('-') > -1 && datePart.indexOf(q) > -1)
+                || datePart.slice(5).indexOf(q) > -1;
+      a.style.display = hit ? '' : 'none';
+      if(hit) shown++;
+    });
+    empty.style.display = shown ? 'none' : 'block';
+  });
+})();
+</script>
 <div class="special-section">
   <h2>📖 专题书摘</h2>
   <div class="special-links">
